@@ -1,7 +1,5 @@
 #include <stdio.h>
 
-int fibonacci(int n);
-
 void busqueda_lineal(int arr[], int len, int numero);
 void busqueda_bin(int arr[], int len, int numero);
 
@@ -86,16 +84,15 @@ void busqueda_bin(int arr[], int len, int numero) {
     int flag = 0;
 
     for(int i = 0 ; i < len ; i++) {
-    // while(inicio <= fin) { //n-1
-        int medio = inicio + (fin - inicio) / 2; //4n
-        
-        if(arr[medio] == numero) { //2n
-            flag = 1; //n
+        int medio = inicio + (fin - inicio) / 2;
+
+        if(arr[medio] == numero) {
+            flag = 1;
             break;
-        } else if(arr[medio] < numero) { //2n
-            inicio = medio + 1; //2n
+        } else if(arr[medio] < numero) {
+            inicio = medio + 1;
         } else {
-            fin = medio - 1; //2n
+            fin = medio - 1;
         }
     }
 
