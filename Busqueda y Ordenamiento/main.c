@@ -63,6 +63,8 @@ int main(void) {
     return 0;
 }
 
+///////////////////// FUNCIONES /////////////////////
+
 void busqueda_lineal(int arr[], int len, int numero) {
     int flag = 0;
     for(int i = 0 ; i < len ; i++) {
@@ -127,23 +129,6 @@ void seleccion(int arr[], int len) {
     }
 }
 
-// Ordena el arreglo usando Insertion Sort
-// Insertion Sort toma cada elemento y lo inserta en la posición correcta dentro de la parte ordenada del arreglo.
-// void insertion_sort(int arr[], int len) {
-//     for (int i = 1; i < len; i++) {
-//         int key = arr[i]; // Elemento a insertar
-//         int j = i - 1;
-//         // Mueve los elementos mayores que key una posición adelante
-//         while (j >= 0 && arr[j] > key) {
-//             arr[j + 1] = arr[j]; // Desplaza el elemento hacia la derecha
-//             j--;
-//         }
-//         // Inserta el elemento en la posición correcta
-//         arr[j + 1] = key;
-//     }
-// }
-
-// Esta función ordena los números de menor a mayor usando el método "insertion sort"
 void insertion_sort(int arr[], int len) {
     int j = 0;
 
