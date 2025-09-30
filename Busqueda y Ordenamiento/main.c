@@ -88,7 +88,9 @@ void busqueda_bin(int arr[], int len, int numero) {
     for(int i = 0 ; i < len ; i++) {
         int medio = inicio + (fin - inicio) / 2;
 
-        if(arr[medio] == numero) {
+        if(inicio > fin) {
+            break;
+        } else if(arr[medio] == numero) {
             flag = 1;
             break;
         } else if(arr[medio] < numero) {
