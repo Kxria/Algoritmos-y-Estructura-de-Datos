@@ -52,7 +52,7 @@ int main(void) {
     
     ///////////////////// BUBBLE SORT /////////////////////
 
-    printf("\nArreglo a usar en bubble sort: \n");
+    printf("\nArreglo a usar en bubble sort:\n");
 	for(int i = 0 ; i < 7 ; i++)
 		printf("[%d] = %d\n", i, arr[i]);
 
