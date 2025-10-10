@@ -3,6 +3,7 @@
 void shell(int arreglo[], int longitud);
 void radixSort(int arr[], int len);
 void mergeSort(int arr[], int len);
+void quicksort(int arr[], int n);
 
 int main(void) {
     printf("|||||||||||||||| RADIXSORT |||||||||||||||||||||\n");
@@ -61,6 +62,27 @@ int main(void) {
     }
     printf("\n");
 
+    /*
+    printf("\n|||||||||||||||| QUICKSORT |||||||||||||||||||||\n");
+
+    int arr_quick[] = {12, 9, 3, 7, 14, 11, 8};
+    int len_quick = sizeof(arr_quick) / sizeof(arr_quick[0]);
+
+    printf("Arreglo original:      LEN = %d\n", len_quick);
+    for (int i = 0; i < len_quick; i++) {
+        printf("%d ", arr_quick[i]);
+    }
+    printf("\n\n");
+
+    quicksort(arr_quick, len);
+
+    printf("Arreglo ordenado con Quick Sort:\n");
+    for (int i = 0; i < len_quick; i++) {
+        printf("%d ", arr_quick[i]);
+    }
+    printf("\n");
+    */
+    
     return 0;
 }
 
@@ -216,52 +238,73 @@ void radixSort(int arr[], int len) {
     }
 }
 
+/*
 void quicksort(int arr[], int n) {
-    int low = 0;           // inicio del arreglo
-    int high = n - 1;      // fin del arreglo
+    int start = 0;
+    int end = n - 1;
 
-    // Mientras todavía quede algo que ordenar
-    while (low < high) {
-        int i = low;                  // índice que va de izquierda a derecha
-        int j = high;                 // índice que va de derecha a izquierda
-        int pivot = arr[(low + high) / 2];  // escogemos el pivote al centro
+    while (start < end) {
+        int i = start;
+        int j = end;
+        int pivot = arr[start + (end - start) / 2];
 
-        // Este ciclo acomoda los elementos menores a la izquierda
-        // y los mayores a la derecha
+        // Partición estilo Hoare
         while (i <= j) {
-            while (arr[i] < pivot) {
-                i++;
-            }
-            while (arr[j] > pivot) {
-                j--;
-            }
+            while (arr[i] < pivot) i++;
+            while (arr[j] > pivot) j--;
             if (i <= j) {
-                int temp = arr[i];
+                int tmp = arr[i];
                 arr[i] = arr[j];
-                arr[j] = temp;
+                arr[j] = tmp;
                 i++;
                 j--;
             }
         }
 
-        // Ahora ya tenemos dos partes: [low..j] y [i..high]
-        // Lo que hacemos es seguir con la parte más grande
-        // y luego reducimos a la parte más pequeña sin usar pila
-
-        if ((j - low) < (high - i)) {
-            // La parte izquierda es más pequeña
-            if (low < j) {
-                high = j;   // seguimos ordenando la izquierda
-                continue;   // volvemos al inicio del while
-            }
-            low = i;        // si no, avanzamos con la derecha
-        } else {
-            // La parte derecha es más pequeña
-            if (i < high) {
-                low = i;    // seguimos ordenando la derecha
+        // Procesamos el subrango más pequeño primero
+        if (j - start < end - i) {
+            if (start < j) {
+                end = j;
                 continue;
             }
-            high = j;       // si no, reducimos por la izquierda
+            start = i;
+        } else {
+                if (i < end) {
+                start = i;
+                continue;
+            }
+            end = j;
+        }
+    }
+
+    // Segunda pasada para subrangos restantes
+    for (int s = 0; s < n - 1; s++) {
+        int a = s;
+        int b = n - 1;
+        while (a < b) {
+            int i = a;
+            int j = b;
+            int pivot = arr[a + (b - a) / 2];
+
+            while (i <= j) {
+                    while (arr[i] < pivot) i++;
+                    while (arr[j] > pivot) j--;
+                    if (i <= j) {
+                    int tmp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = tmp;
+                    i++;
+                    j--;
+                }
+            }
+            if (j - a < b - i) {
+                    if (a < j) b = j;
+                    else a = i;
+                } else {
+                        if (i < b) a = i;
+                        else b = j;
+            }
         }
     }
 }
+*/
