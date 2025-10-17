@@ -6,13 +6,11 @@ struct Nodo {
     struct Nodo *ant;   
 };
 
-int vacia(struct Nodo *tope)
-{
+int vacia(struct Nodo *tope) {
     return (!tope)? 1:0;
 }
 
-struct Nodo* crearNodo(int n)
-{
+struct Nodo* crearNodo(int n) {
     //PASO 1: Creamos el nuevo nodo
     struct Nodo *nuevo_nodo;
     nuevo_nodo = (struct Nodo*)malloc(sizeof(struct Nodo));
@@ -23,22 +21,19 @@ struct Nodo* crearNodo(int n)
     return(nuevo_nodo);
 }
 
-struct Nodo* push(struct Nodo *tope, int n)
-{
+struct Nodo* push(struct Nodo *tope, int n) {
     struct Nodo *aux;
     aux = crearNodo(n);
-    aux->ant = tope;
+    aux -> ant = tope;
     tope = aux;
     return(tope);
 }
 
-void mostrar(struct Nodo *tope)
-{
+void mostrar(struct Nodo *tope) {
     struct Nodo *aux;
     if(!tope)
         printf("La pila esta vacia");
-    else
-    {
+    else {
         aux = tope;
         do{
             printf("%d ", aux->dato);
@@ -47,21 +42,18 @@ void mostrar(struct Nodo *tope)
     }
 }
 
-struct Nodo* pop(struct Nodo *tope)
-{
+struct Nodo* pop(struct Nodo *tope) {
     struct Nodo *aux;
-    int dato;
     aux = tope;
     tope = tope->ant;
     free(aux);
     return(tope);
 }
 
-void main()
-{
+void main(void) {
     struct Nodo *tope = NULL;
     int dato, op;
-    do{
+    do {
         printf("\nPROGRAMA QUE IMPLEMENTA PILAS CON LISTAS ENLAZADAS\n\n");
         printf("1. Push\n");
         printf("2. Pop\n");
@@ -69,8 +61,7 @@ void main()
         printf("4. Salir\n");
         printf("Opcion: ");
         scanf("%d", &op);
-        switch(op)
-        {
+        switch(op) {
             case 1: 
                 printf("Introduce un numero: ");
                 scanf("%d", &dato);
@@ -81,8 +72,7 @@ void main()
                 break;
                 
             case 2: 
-                if(!vacia(tope))
-                {
+                if(!vacia(tope)) {
                     printf("El dato eliminado es: %d\n", tope->dato);
                     tope = pop(tope);
                     printf("El nuevo dato en la cima es: %d\n", tope->dato);
@@ -91,11 +81,13 @@ void main()
                     printf("Pila vacia\n");
                 break;
                 
-            case 3: if(!vacia(tope))
+            case 3: 
+                if(!vacia(tope))
                 mostrar(tope);
                 else printf("Pila vacia\n");
                 break;
-            case 4: break;
+            case 4: 
+                break;
         }
-    }while(op != 4);
+    } while(op != 4);
 }

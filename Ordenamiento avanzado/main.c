@@ -82,7 +82,7 @@ int main(void) {
     }
     printf("\n");
     */
-    
+
     return 0;
 }
 
@@ -91,7 +91,7 @@ void shell(int arr[], int len) {
     // Declaración: int k = len / 2 → empezamos con la mitad del arreglo
     // Comparación: k > 0 → seguimos reduciendo el gap hasta llegar a 1
     // Incremento: k = k / 2 → el gap se reduce a la mitad en cada iteración
-    for (int k = len / 2; k > 0; k = k / 2) {
+    for (int k = len / 2 ; k > 0 ; k = k / 2) {
 
         // Segundo ciclo: recorre el arreglo desde el índice 'k' hasta el final
         // Declaración: int i = k → empezamos en el primer índice que permite comparación con salto 'k'
@@ -105,24 +105,15 @@ void shell(int arr[], int len) {
             // Declaración: int j = i → empezamos desde el elemento actual
             // Comparación: j >= k → nos aseguramos de no salir del arreglo por la izquierda
             // Incremento: j = j - k → retrocedemos en pasos del tamaño del gap
-            for (j = i; j >= k; j = j - k) {
-
-                // Condición: comparamos el valor anterior (arr[j - k]) con el valor actual (temp)
-                // Si arr[j - k] > temp → significa que el valor anterior está desordenado y debe moverse
-                // arr[j - k]: elemento anterior en la secuencia con salto 'k'
-                // temp: valor que estamos intentando insertar en su posición correcta
-                if (arr[j - k] > temp) {
-                    arr[j] = arr[j - k]; // Desplazamos el elemento hacia la derecha para hacer espacio
-                } else {
-                    break; // Si el orden es correcto, salimos del ciclo
-                }
+            for (j = i; (j >= k) && (arr[j - k] > temp); j = j - k) {
+                arr[j] = arr[j - k]; // Desplazamos el elemento hacia la derecha para hacer espacio
             }
 
             arr[j] = temp; // Insertamos el valor guardado en la posición correcta
 
             // Mostrar el arreglo después de cada inserción
             printf("k[%d] = %d: \n", i, k);
-            for (int m = 0; m < len; m++) {
+            for (int m = 0 ; m < len ; m++) {
                 printf("%d ", arr[m]);
             }
             printf("\n");
@@ -144,12 +135,11 @@ void mergeSort(int arr[], int len) {
                 R = len - 1;
             }
             
-            // índices descriptivos para el merge
+            // índices para el merge
             int idx = L;
             int k = L;
             int mid = q + 1;
 
-            // merge clásico
             while (idx <= q && mid <= R) {
                 if (arr[idx] < arr[mid]) {
                     temp[k] = arr[idx];
@@ -200,7 +190,7 @@ void radixSort(int arr[], int len) {
     }
     // Bucle principal: se repite mientras haya dígitos que procesar
     // Condición: k <= max → mientras la base actual sea menor o igual al número más grande
-    while (k <= max) {
+    for(int k = 1 ; k <= max ; k *= 10) {
 
         // Ordenamiento por inserción basado en el dígito actual
         // Declaración: int i = 1 → empezamos desde el segundo elemento
@@ -214,16 +204,8 @@ void radixSort(int arr[], int len) {
             // Declaración: j = i - 1 → empezamos justo antes del elemento actual
             // Comparación: j >= 0 → seguimos mientras no salgamos del arreglo por la izquierda
             // Incremento: j-- → retrocedemos uno por uno
-            for (j = i - 1; j >= 0; j--) {
-
-                // Comparación entre dígitos: ¿el dígito anterior es mayor que el actual?
-                // (arr[j] / k) % 10 → extrae el dígito de arr[j] en la base actual
-                // pivote → dígito del número que estamos insertando
-                if (((arr[j] / k) % 10) > pivote) {
-                    arr[j + 1] = arr[j];    // Si el dígito anterior es mayor, lo desplazamos a la derecha
-                } else {
-                    break;                  // Si no, ya encontramos la posición correcta
-                }
+            for (j = i - 1; (j >= 0) && (((arr[j] / k) % 10) > pivote); j--) {
+                arr[j + 1] = arr[j];    // Si el dígito anterior es mayor, lo desplazamos a la derecha
             }
             arr[j + 1] = temp;              // Insertamos el valor en su posición ordenada
         }
@@ -233,8 +215,6 @@ void radixSort(int arr[], int len) {
             printf("%d ", arr[i]);          // Imprime cada elemento del arreglo
         }
         printf("\n");
-
-        k = k * 10;                          // Avanzamos a la siguiente base (unidades → decenas → centenas...)
     }
 }
 
