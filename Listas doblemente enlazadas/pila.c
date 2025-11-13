@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct nodo {
+typedef struct _nodo {
     int dato;
-    struct nodo *ant;
-    struct nodo *sig;
-}nodo;
+    struct _nodo *ant;
+    struct _nodo *sig;
+}Nodo;
 
-nodo* crearnodo(int dato) {
-    nodo *nuevo;
-    nuevo = (nodo*)malloc(sizeof(nodo));
+Nodo* crearnodo(int dato) {
+    Nodo *nuevo;
+    nuevo = (Nodo*)malloc(sizeof(Nodo));
     nuevo->dato = dato;
     nuevo->sig = NULL;
     nuevo->ant = NULL;
@@ -17,8 +17,8 @@ nodo* crearnodo(int dato) {
     return nuevo;
 }
 
-void insertar(nodo *inicio , int dato) {
-    struct nodo *aux, *nuevo;
+void insertar(Nodo *inicio , int dato) {
+    Nodo *aux, *nuevo;
     aux = inicio;
     nuevo = crearnodo(dato);
     
@@ -30,8 +30,8 @@ void insertar(nodo *inicio , int dato) {
     nuevo->ant = aux;
 }
 
-void mostrar(nodo *inicio) {
-    struct nodo *aux;
+void mostrar(Nodo *inicio) {
+    Nodo *aux;
     if(!inicio)
         printf("\nEsta vacia\n");
     else {
@@ -44,8 +44,8 @@ void mostrar(nodo *inicio) {
     }
 }
 
-nodo* eliminar1(nodo *inicio) {
-    nodo *aux = inicio;
+Nodo* eliminar(Nodo *inicio) {
+    Nodo *aux = inicio;
 
     // Buscar el último nodo
     while (aux->sig != NULL) {
@@ -61,35 +61,35 @@ nodo* eliminar1(nodo *inicio) {
     }
 
     // Caso 2: hay más de un nodo
-    aux->ant->sig = NULL; // desconectar el último nodo
+    aux->ant->sig = NULL; // desconectar el ultimo nodo
     free(aux);
 
     return inicio;
 }
 
-nodo* eliminar2(nodo *inicio) {
-    nodo *aux;
-    aux = inicio;
+// nodo* eliminar2(nodo *inicio) {
+//     nodo *aux;
+//     aux = inicio;
     
-    while (aux->sig != NULL) {
-        aux = aux->sig;
-    }
+//     while (aux->sig != NULL) {
+//         aux = aux->sig;
+//     }
 
-    printf("\nSe elimina: %d\n", aux->dato);
+//     printf("\nSe elimina: %d\n", aux->dato);
 
-    // Si el nodo a eliminar no es el primero
-    if (aux->ant != NULL) {
-        aux->ant->sig = NULL;
-        free(aux);
-        return inicio; // el inicio no cambia
-    } else {
-        free(aux);
-        return NULL; // la lista queda vacía
-    }
-}
+//     // Si el nodo a eliminar no es el primero
+//     if (aux->ant != NULL) {
+//         aux->ant->sig = NULL;
+//         free(aux);
+//         return inicio; // el inicio no cambia
+//     } else {
+//         free(aux);
+//         return NULL; // la lista queda vacía
+//     }
+// }
 
 int main(void) {
-    struct nodo *inicio = NULL;
+    Nodo *inicio = NULL;
     int dato, op;
     do {
         printf("\n 1. Insertar en la lista");
