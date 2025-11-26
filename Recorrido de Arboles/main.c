@@ -1,8 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-typedef struct Nodo{
-    int dato;
+typedef struct Nodo {
+    int dato; // dato del nodo
     struct Nodo *izq; // puntero al hijo izquierdo
     struct Nodo *der; // puntero al hijo derecho
     struct Nodo *padre; // puntero al padre del nodo
@@ -21,12 +21,12 @@ Nodo* crearNodo(int dato) {
 }
 
 Nodo* insertarDato(Nodo* raiz, int dato) {
-    if(!raiz) { // si la raíz es NULL
+    if(!raiz) { // si es el primer dato insertado
         return crearNodo(dato); // crear y devolver el nuevo nodo como raíz
     }
     
     Nodo* nodo = raiz; // puntero para recorrer el árbol desde la raíz
-    Nodo* aux = NULL; // puntero al padre del nodo donde se insertará
+    Nodo* aux = NULL; // puntero al padre
     
     while(nodo != NULL) { // recorrer hasta encontrar posición NULL
         aux = nodo; // guardar el padre actual
@@ -42,168 +42,81 @@ Nodo* insertarDato(Nodo* raiz, int dato) {
     }
     
     Nodo* nuevo = crearNodo(dato); // crear el nuevo nodo
-    nuevo->padre = aux; // enlazar su padre
+    nuevo->padre = aux; // se apunta su padre
     
-    if(dato < aux->dato) { // si debe ir como hijo izquierdo
+    // se identifica si sera hijo derecho o izquierdo
+    if(dato < aux->dato) {
         aux->izq = nuevo; // asignar como hijo izquierdo
     } else {
         aux->der = nuevo; // asignar como hijo derecho
     }
     
-    return raiz; // devolver la raíz
+    return raiz;
 }
 
 Nodo* eliminar(Nodo *raiz, int dato) {
-    Nodo* eliminar = raiz; // puntero para buscar el nodo a eliminar
+    Nodo* eliminar = raiz; // puntero auxiliar
     
-    while(eliminar != NULL && eliminar->dato != dato) { // buscar el nodo
-        if(dato < eliminar->dato) { // si debe buscar a la izquierda
-            eliminar = eliminar->izq; // mover a hijo izquierdo
+    // buscar nodo
+    while(eliminar != NULL && eliminar->dato != dato) {
+        if(dato < eliminar->dato) { // si el dato es menor al nodo actual
+            eliminar = eliminar->izq; // irse a la izquierda
         } else {
-            eliminar = eliminar->der; // mover a hijo derecho
+            eliminar = eliminar->der; // irse a la derecha
         }
     }
 
-    if(eliminar == NULL) { // si no se encontró el dato
-        printf("Dato inexistente\n"); // informar que no existe
-        return raiz; // devolver raíz sin cambios
+    // si el dato a eliminar no existe
+    if(eliminar == NULL) {
+        printf("Dato inexistente\n");
+        return raiz;
     }
 
-    if(eliminar->izq != NULL && eliminar->der != NULL) { // si tiene dos hijos
-        Nodo* sucesor = eliminar->der; // buscar el sucesor en el subárbol derecho
-        while (sucesor->izq != NULL) { // ir al nodo más a la izquierda del subárbol derecho
-            sucesor = sucesor->izq; // avanzar al hijo izquierdo
+    // CASO: NODO CON DOS HIJOS
+    if(eliminar->izq != NULL && eliminar->der != NULL) { // si el nodo a eliminar tiene dos hijos
+        Nodo* predecesor = eliminar->izq; // dirigirse al subarbol izquierdo
+        while (predecesor->der != NULL) { // buscar nodo mas derecho del arbol izquierdo
+            predecesor = predecesor->der; // obtener precedecesor
         }
-        eliminar->dato = sucesor->dato; // copiar el valor del sucesor al nodo a eliminar
-        eliminar = sucesor; // en realidad eliminaremos el sucesor (que tiene <=1 hijos)
+        eliminar->dato = predecesor->dato; // cambiar dato de la raiz por el precedesor
+        eliminar = predecesor; // actualizar para eliminar el predecesor
     }
     
-    Nodo* hijo = NULL; // puntero al hijo que reemplazará al nodo eliminado
+    // se verifica si tiene hijos
+    Nodo* hijo = NULL;
     if(eliminar->izq != NULL) { // si tiene hijo izquierdo
-        hijo = eliminar->izq; // hijo será el izquierdo
-    } else {
-        if (eliminar->der != NULL) { // si tiene hijo derecho
-            hijo = eliminar->der; // hijo será el derecho
-        }
+        hijo = eliminar->izq; // su hijo es el nodo izquierdo
+    } else if(eliminar->der != NULL) { // si tiene hijo derecho
+        hijo = eliminar->der; // su hijo es el nodo derecho
     }
 
-    if(hijo != NULL) { // si hay un hijo que reemplaza
-        hijo->padre = eliminar->padre; // actualizar su puntero a padre
+    // si el nodo tuvo un hijo
+    if(hijo != NULL) {
+        hijo->padre = eliminar->padre; // conectar el hijo con el nuevo padre
     }
-
-    if(eliminar->padre == NULL) { // si el nodo a eliminar es la raíz
-        raiz = hijo; // la nueva raíz es el hijo (puede ser NULL)
-    } else {
-        if(eliminar == eliminar->padre->izq) { // si era hijo izquierdo
-            eliminar->padre->izq = hijo; // enlazar el hijo al padre
+    
+    // eliminacion del nodo
+    if(eliminar->padre == NULL) { // si el padre fue NULL, significa que era la raiz
+        raiz = hijo; // si el nodo era la raiz, su hijo se convierte en la raiz
+    } else { // si no, se elimina la hoja en base a su padre 
+        if(eliminar == eliminar->padre->izq) { // encontramos el nodo a eliminar
+            eliminar->padre->izq = hijo; // se elimina el hijo izquierdo
         } else {
-            eliminar->padre->der = hijo; // enlazar el hijo al padre (derecho)
+            eliminar->padre->der = hijo; // se elimina el hijo derecho
         }
     }
 
-    free(eliminar); // liberar la memoria del nodo eliminado
-    return raiz; // devolver la raíz del árbol actualizado
+    free(eliminar); // se elimina el nodo
+    return raiz;
 }
 
-void imprimirPreorden(Nodo* nodo) {
-    if (nodo == NULL) { // caso base: nodo nulo
-        return; // no hacer nada
-    }
-
-    printf("%d ", nodo->dato); // visitar el nodo (raíz)
-    imprimirPreorden(nodo->izq); // recorrer subárbol izquierdo
-    imprimirPreorden(nodo->der); // recorrer subárbol derecho
-}
-
-void imprimirPreorden2(Nodo* raiz) {
-    Nodo* aux = raiz; // puntero auxiliar para recorrer
-
-    while(aux != NULL) { // mientras haya nodos
-        printf("%d ", aux->dato); // imprimir el dato actual
-        
-        if(aux->izq != NULL) { // si hay hijo izquierdo
-            aux = aux->izq; // bajar a la izquierda
-        } else if(aux->der != NULL) { // si hay hijo derecho pero no izquierdo
-            aux = aux->der; // bajar a la derecha
-        } else { // si es hoja, subir hasta encontrar un nodo con hijo derecho no visitado
-            while (aux->padre != NULL && (aux == aux->padre->der || !aux->padre->der)) { // subir mientras venga desde derecha o padre no tenga derecha
-                aux = aux->padre; // subir al padre
-            }
-            
-            if(aux->padre == NULL) { // si llegamos a la raíz sin encontrar derecha
-                break; // terminar el recorrido
-            }
-            aux = aux->padre->der; // mover al subárbol derecho del padre
-        }
-    }
-}
-
-void imprimirInorden(Nodo* nodo) { // recorrido inorden recursivo
-    if(nodo == NULL)  // caso base
-        return; // no hacer nada
+void imprimirInorden(Nodo* nodo) {
+    if(nodo == NULL) // caso base
+        return;
 
     imprimirInorden(nodo->izq); // recorrer izquierda
-    printf("%d ", nodo->dato); // visitar nodo
+    printf("%d ", nodo->dato);
     imprimirInorden(nodo->der); // recorrer derecha
-}
-
-void imprimirInorden2(Nodo* raiz) { // inorden iterativo (Morris traversal)
-    Nodo* aux = raiz; // puntero auxiliar
-
-    while(aux != NULL) { // mientras queden nodos
-        if(aux->izq == NULL) { // si no hay hijo izquierdo
-            printf("%d ", aux->dato); // visitar nodo
-            aux = aux->der; // mover a la derecha
-        } else {
-            Nodo* aux2 = aux->izq; // encontrar predecesor
-
-            while(aux2->der != NULL && aux2->der != aux) { // buscar el extremo derecho del subárbol izquierdo
-                aux2 = aux2->der; // avanzar a la derecha
-            }
-            
-            if(aux2->der == NULL) { // si enlace temporal no existe
-                aux2->der = aux; // crear enlace temporal al nodo actual
-                aux = aux->izq; // mover al subárbol izquierdo
-            } else {
-                aux2->der = NULL; // quitar el enlace temporal
-                printf("%d ", aux->dato); // visitar el nodo
-                aux = aux->der; // mover a la derecha
-            }
-        }
-    }
-}
-
-void imprimirPostorden(Nodo* nodo) { // recorrido postorden recursivo
-    if(nodo == NULL)  // caso base
-        return; // no hacer nada
-
-    imprimirPostorden(nodo->izq); // recorrer izquierda
-    imprimirPostorden(nodo->der); // recorrer derecha
-    printf("%d ", nodo->dato); // visitar nodo
-}
-
-void imprimirPostorden2(Nodo* raiz) { // postorden iterativo usando padres y auxiliar
-    Nodo* aux = raiz; // puntero de recorrido
-    Nodo* aux2 = NULL; // puntero al último nodo procesado
-    
-    while(aux) { // mientras haya nodos
-        if(aux2 == aux->padre && (aux->izq || aux->der)) { // si venimos desde el padre y hay hijos
-            aux2 = aux; // actualizar último procesado
-            
-            if(aux->izq)         // preferir ir a la izquierda
-                aux = aux->izq;  // bajar a izquierda
-            else
-                aux = aux->der;  // bajar a derecha
-            
-        } else if(aux->izq == aux2 && aux->der) { // si venimos desde la izquierda y hay derecha
-            aux2 = aux; // actualizar último procesado
-            aux = aux->der; // explorar derecha
-        } else { // si no hay hijos por explorar
-            printf("%d ", aux->dato); // procesar nodo
-            aux2 = aux; // marcar como último procesado
-            aux = aux->padre; // subir al padre
-        }
-    }
 }
 
 int main(void) {
@@ -234,28 +147,8 @@ int main(void) {
                 break;
 
             case 3:
-                printf("Mostrar preorden\n");
-                imprimirPreorden(raiz);
-                printf("\n\n\n");
-
-                printf("Mostrar preorden2\n");
-                imprimirPreorden2(raiz);
-                printf("\n\n\n");
-
                 printf("Mostrar inorden\n");
                 imprimirInorden(raiz);
-                printf("\n\n\n");
-
-                printf("Mostrar inorden2\n");
-                imprimirInorden2(raiz);
-                printf("\n\n\n");
-
-                printf("Mostrar postorden\n");
-                imprimirPostorden(raiz);
-                printf("\n\n\n");
-
-                printf("Mostrar postorden2\n");
-                imprimirPostorden2(raiz);
                 printf("\n\n");
                 break;
 
